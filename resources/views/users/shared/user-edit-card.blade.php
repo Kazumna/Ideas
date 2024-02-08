@@ -53,29 +53,7 @@
 
                 <button class="btn btn-dark btn-sm mb-3">Save</button>
 
-                <div class="d-flex justify-content-start">
-                    {{-- Followers --}}
-                    <a href="#" class="fw-light nav-link fs-6 me-3"> <span class="fas fa-user me-1"></span> 0
-                        Followers </a>
-
-                    {{-- Number of ideas,  Getting data from User models, call user model and access ideas method --}}
-                    <a href="#" class="fw-light nav-link fs-6 me-3"> <span class="fas fa-brain me-1"></span>
-                        {{ $user->ideas()->count() }} </a>
-
-                    {{-- comments --}}
-                    <a href="#" class="fw-light nav-link fs-6"> <span class="fas fa-comment me-1"></span>
-                        {{ $user->comments()->count() }} </a>
-
-                </div>
-
-                @auth
-                    {{-- if id of the login user is not identical to the user we are viewing, dont show this button --}}
-                    @if (Auth::id() !== $user->id)
-                        <div class="mt-3">
-                            <button class="btn btn-primary btn-sm"> Follow </button>
-                        </div>
-                    @endif
-                @endauth
+                @include('users.shared.user-stats')
 
             </div>
         </form>

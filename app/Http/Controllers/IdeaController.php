@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CreateIdeaRequest;
+use App\Http\Requests\UpdateIdeaRequest;
 use App\Models\Idea;
 use Illuminate\Http\Request;
 
@@ -14,11 +16,15 @@ class IdeaController extends Controller
         return view('ideas.show', compact('idea'));
     }
 
-    public function store() {
+    public function store(CreateIdeaRequest $request) {
 
-        $validated = request()->validate([
-            "content" => "required|min:5|max:240",
-        ]);
+        ///Old Method
+        // $validated = request()->validate([
+        //     "content" => "required|min:5|max:240",
+        // ]);
+
+        //New Method Validation from Requests/CreateIdeaRequest
+        $validated = $request->validated();
 
         //store the Id of the current login user whenever create new idea
         //setting current login user and store in database
@@ -42,9 +48,16 @@ class IdeaController extends Controller
     public function destroy(Idea $idea) {
 
         //checking if current login user ID is the same as User Id of the Idea
-        if (auth()->id() !== $idea->user_id) {
-            abort(404);
-        }
+        //means checking if the user is the owner of this idea
+        // if (auth()->id() !== $idea->user_id) {
+        //     abort(404);
+        // }
+
+        //Short version of above. idea.delete is from Gate
+        // $this->authorize('idea.delete', $idea);
+
+        //Using Policy Method and pass in model class
+        $this->authorize('delete', $idea);
 
 
         //firsOrFail handle deleting id simutaneously
@@ -58,25 +71,42 @@ class IdeaController extends Controller
     public function edit(Idea $idea) {
 
          //checking if current login user ID is the same as User Id of the Idea
-         if (auth()->id() !== $idea->user_id) {
-            abort(404);
-        }
+        //  if (auth()->id() !== $idea->user_id) {
+        //     abort(404);
+        // }
+
+        //Short version of above. idea.edit is from Gate
+        // $this->authorize('idea.edit', $idea);
+
+        //Using Policy Method and pass in model class
+        $this->authorize('update', $idea);
 
         $editing = true;
 
         return view('ideas.show', compact('idea', 'editing'));
     }
 
-    public function update(Idea $idea) {
+    public function update(UpdateIdeaRequest $request, Idea $idea) {
 
          //checking if current login user ID is the same as User Id of the Idea
-         if (auth()->id() !== $idea->user_id) {
-            abort(404);
-        }
+        // if (auth()->id() !== $idea->user_id) {
+        //     abort(404);
+        // }
 
-        $validated = request()->validate([
-            "content" => "required|min:5|max:240",
-        ]);
+        //Short version of above. idea.delete is from Gate
+        // $this->authorize('idea.edit', $idea);
+
+        //Using Policy Method and pass in model class
+        $this->authorize('update', $idea);
+
+
+        //Old Validation Method
+        // $validated = request()->validate([
+        //     "content" => "required|min:5|max:240",
+        // ]);
+
+        //New Method Validation from Requests/UpdateIdeaRequest
+        $validated = $request->validated();
 
         //Short version
         $idea->update($validated);

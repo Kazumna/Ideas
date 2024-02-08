@@ -3,31 +3,34 @@
         <div class="d-flex align-items-center justify-content-between">
 
             <div class="d-flex align-items-center">
-                <img style="width:50px" class="me-2 avatar-sm rounded-circle"
-                    src="{{ $idea->user->getImageURL() }}"
+                <img style="width:50px" class="me-2 avatar-sm rounded-circle" src="{{ $idea->user->getImageURL() }}"
                     alt="{{ $idea->user->name }}">
                 <div>
-                    <h5 class="card-title mb-0"><a href="{{ route('users.show', $idea->user->id) }}"> {{ $idea->user->name }} </a></h5>
+                    <h5 class="card-title mb-0"><a href="{{ route('users.show', $idea->user->id) }}">
+                            {{ $idea->user->name }} </a></h5>
                 </div>
             </div>
 
-            <div>
-                <form action=" {{ route('ideas.destroy', $idea->id) }} " method="POST">
-                    @csrf
-                    @method('delete')
+            <div class="d-flex">
+                <a href="{{ route('ideas.show', $idea->id) }}"> View </a>
 
+                @auth
                     {{-- only show if current user  --}}
-                    @if (auth()->id() == $idea->user_id)
+                    {{-- @if (Auth::id() === $idea->user_id) --}}
+
+                    {{-- From Policy --}}
+                    @can('update', $idea)
                         <a class="mx-2" href="{{ route('ideas.edit', $idea->id) }}"> Edit </a>
-                    @endif
 
-                    <a href="{{ route('ideas.show', $idea->id) }}"> View </a>
+                        <form method="POST" action="{{ route('ideas.destroy', $idea->id) }}">
+                            @csrf
+                            @method('delete')
+                            <button class="ms-1 btn btn-danger btn-sm">X</button>
+                        </form>
+                    @endcan
 
-                    @if (auth()->id() == $idea->user_id)
-                        <button class="ms-1 btn btn-danger btn-sm">X</button>
-                    @endif
 
-                </form>
+                @endauth
             </div>
 
         </div>
@@ -56,17 +59,17 @@
         @endif
 
         <div class="d-flex justify-content-between">
-            <div>
-                <a href="#" class="fw-light nav-link fs-6"> <span class="fas fa-heart me-1">
-                    </span> {{ $idea->likes }} </a>
-            </div>
+
+            {{-- Like Button --}}
+            @include('ideas.shared.like-button')
+
             <div>
                 <span class="fs-6 fw-light text-muted"> <span class="fas fa-clock"> </span>
-                    {{ $idea->created_at }} </span>
+                    {{ $idea->created_at->diffForHumans() }} </span>
             </div>
         </div>
 
-        @include('shared.comments-box')
+        @include('ideas.shared.comments-box')
 
     </div>
 

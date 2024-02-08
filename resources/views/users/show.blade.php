@@ -1,4 +1,7 @@
-@extends('layout.layout')
+@extends('layout.app')
+
+{{-- custom title with User name viewing --}}
+@section('title', $user->name)
 
 @section('content')
     <div class="row">
@@ -14,7 +17,7 @@
             <div class="mt-3">
                 {{-- Main Content --}}
 
-                @include('shared.user-card')
+                @include('users.shared.user-card')
             </div>
 
             <hr>
@@ -24,7 +27,7 @@
             {{-- if for loop $ideas is empty, it will execute empty area --}}
             @forelse ($ideas as $idea)
                 <div class="mt-3">
-                    @include('shared.idea-card')
+                    @include('ideas.shared.idea-card')
                 </div>
             @empty
                 <p class="text-center mt-4">No results found.</p>

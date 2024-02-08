@@ -1,5 +1,4 @@
-<nav class="navbar navbar-expand-lg bg-dark border-bottom border-bottom-dark ticky-top bg-body-tertiary"
-    data-bs-theme="dark">
+<nav class="navbar navbar-expand-lg bg-dark border-bottom border-bottom-dark ticky-top bg-body-tertiary" data-bs-theme="dark">
     <div class="container">
 
         <a class="navbar-brand fw-light" href="/"><span class="fas fa-brain me-1"></span>{{ config('app.name') }}</a>
@@ -11,21 +10,32 @@
 
         <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
             <ul class="navbar-nav">
-
+                {{-- <a class="{{ (Route::is('terms')) ? 'text-white bg-primary rounded' : '' }} nav-link" href="{{ route('terms') }}"> --}}
                 @guest
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="{{ route('login') }}">Login</a>
+                        <a class=" {{ Route::is('login') ? 'active' : '' }} nav-link" aria-current="page"
+                            href="{{ route('login') }}">Login</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('register') }}">Register</a>
-                    </li >
+                        <a class=" {{ Route::is('register') ? 'active' : '' }} nav-link"
+                            href="{{ route('register') }}">Register</a>
+                    </li>
                 @endguest
 
 
                 {{-- laravel inject Auth class to blade file and static method called user function --}}
                 @auth
+                    @if (Auth::user()->is_admin)
+                        <li class="nav-item">
+                            <a class=" {{ Route::is('admin.dashboard') ? 'active' : '' }} nav-link" href="{{ route('admin.dashboard') }}">
+                                Admin Dashboard</a>
+                        </li>
+                    @endif
+
+
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('profile') }}">{{ Auth::user()->name }}</a>
+                        <a class=" {{ Route::is('profile') ? 'active' : '' }} nav-link"
+                            href="{{ route('profile') }}">{{ Auth::user()->name }}</a>
                     </li>
 
                     <li class="nav-item">

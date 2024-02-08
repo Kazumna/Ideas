@@ -18,6 +18,7 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
+        'is_admin',
         'name',
         'bio',
         'image',
@@ -55,11 +56,39 @@ class User extends Authenticatable
         return $this->hasMany(Comment::class)->latest();
     }
 
+    //Many To Many Relationship
+    public function followings() {
+        return $this->belongsToMany(User::class, 'follower_user', 'follower_id', 'user_id')->withTimestamps();
+    }
+
+    public function followers() {
+        return $this->belongsTOmany(User::class, 'follower_user', 'user_id', 'follower_id')->withTimestamps();
+    }
+    //
+
+    //pass in User model to see if we follow this User or not
+    public function follows(User $user) {
+        //where user_id equal to user that we are following. It means checking if there are any records or not.
+        return $this->followings()->where('user_id', $user->id)->exists();
+
+    }
+
+    //all the users that like the post, means this "like" belong to this Idea
+    public function likes() {
+        return $this->belongsToMany(Idea::class, 'idea_like')->withTimestamps();
+    }
+
+    public function likesIdea(Idea $idea) {
+        //where idea_id equal to id that we like. It means checking if there are any records or not.
+        return $this->likes()->where('idea_id', $idea->id)->exists();
+
+    }
+
     public function getImageURL() {
         if ($this->image) {
             return url('storage/'. $this->image);
         }
-        return "https://api.dicebear.com/6.x/fun-emoji/svg?seed={{$this->name}}";
+        return "https://api.dicebear.com/6.x/fun-emoji/svg?seed={$this->name}";
     }
 
 

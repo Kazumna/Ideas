@@ -1,4 +1,7 @@
-@extends('layout.layout')
+@extends('layout.app')
+
+{{-- title is passed from layout.app @yield --}}
+@section('title', 'Dashboard')
 
 @section('content')
     <div class="row">
@@ -12,17 +15,18 @@
             @include('shared.success-message')
 
 
-            @include('shared.submit-idea')
+            {{-- Share button  --}}
+            @include('ideas.shared.submit-idea')
 
             <hr>
 
             {{-- if for loop $ideas is empty, it will execute empty area --}}
             @forelse ($ideas as $idea)
                 <div class="mt-3">
-                    @include('shared.idea-card')
+                    @include('ideas.shared.idea-card')
                 </div>
             @empty
-                <p class="text-center mt-4">No results found.</p>
+                <p class="text-center mt-4">No Results found.</p>
             @endforelse
 
 

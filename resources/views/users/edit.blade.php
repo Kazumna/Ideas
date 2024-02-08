@@ -1,4 +1,6 @@
-@extends('layout.layout')
+@extends('layout.app')
+
+@section('title', 'Edit Profile')
 
 @section('content')
     <div class="row">
@@ -14,7 +16,7 @@
             <div class="mt-3">
                 {{-- Main Content --}}
 
-                @include('shared.user-edit-card')
+                @include('users.shared.user-edit-card')
             </div>
 
             <hr>
@@ -24,7 +26,7 @@
             {{-- if for loop $ideas is empty, it will execute empty area --}}
             @forelse ($ideas as $idea)
                 <div class="mt-3">
-                    @include('shared.idea-card')
+                    @include('ideas.shared.idea-card')
                 </div>
             @empty
                 <p class="text-center mt-4">No results found.</p>

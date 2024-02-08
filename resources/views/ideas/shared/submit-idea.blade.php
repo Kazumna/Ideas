@@ -19,5 +19,7 @@
 @endauth
 
 @guest
-    <h4> Login to share yours ideas </h4>
+    {{-- __ is a helper method with Laravel Function --}}
+    {{-- This value is getting from lang/en/ideas.php --}}
+    <h4> {{__('ideas.login_to_share')}} </h4>
 @endguest

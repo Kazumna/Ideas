@@ -1,4 +1,6 @@
-@extends('layout.layout')
+@extends('layout.app')
+
+@section('title', 'View Idea')
 
 @section('content')
     <div class="row">
@@ -11,8 +13,9 @@
 
             @include('shared.success-message')
 
+            {{-- Idea card --}}
             <div class="mt-3">
-                @include('shared.idea-card')
+                @include('ideas.shared.idea-card')
             </div>
 
         </div>
